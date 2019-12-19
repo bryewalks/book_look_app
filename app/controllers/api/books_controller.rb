@@ -6,7 +6,7 @@ class Api::BooksController < ApplicationController
 
   def create
     @book = Book.new(book_params)
-    if @book
+    if @book.save
       render 'show.json.jbuilder'
     else
       render json: {errors: @book.errors.full_messages}, status: :unprocessable_entity
