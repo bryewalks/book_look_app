@@ -15,10 +15,22 @@ class Api::BooksController < ApplicationController
 
   def show
     @book = Book.find(params[:id])
+    render 'show.json.jbuilder'
   end
 
   def search
-    #google api search goes here
+    title = book_params[:search_term].gsub(/ +/, '_')
+    response = HTTP.get("https://www.googleapis.com/books/v1/volumes?q=#{title}&maxResults=25")
+    searched_books = JSON.parse(response.body)["items"]
+    @books = []
+    searched_books.each do |book|
+      @books << Book.new(
+                          title: book["volumeInfo"]["title"] || "NA",
+                          author: book["volumeInfo"]["authors"] || "NA",
+                          publisher: book["volumeInfo"]["publisher"] || "NA"
+                        )
+    end
+    render 'index.json.jbuilder'
   end
 
   def update
@@ -41,6 +53,6 @@ class Api::BooksController < ApplicationController
   def book_params
     params
       .require(:book)
-      .permit(:author, :title, :publisher, :image_url)
+      .permit(:author, :title, :publisher, :image_url, :search_term)
   end
 end
