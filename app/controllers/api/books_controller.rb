@@ -27,7 +27,8 @@ class Api::BooksController < ApplicationController
       @books << Book.new(
                           title: book["volumeInfo"]["title"] || "NA",
                           author: book["volumeInfo"]["authors"] || "NA",
-                          publisher: book["volumeInfo"]["publisher"] || "NA"
+                          publisher: book["volumeInfo"]["publisher"] || "NA",
+                          image_url: book["volumeInfo"]["imageLinks"]["thumbnail"] || "NA"
                         )
     end
     render 'index.json.jbuilder'
