@@ -40,4 +40,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'http'
 gem 'rack-cors'
-gem 'simple_jwt_auth'
+gem 'simple_jwt_auth', '>= 0.1.2'
