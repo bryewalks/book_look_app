@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_24_140226) do
+ActiveRecord::Schema.define(version: 2019_12_25_094403) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,7 +25,7 @@ ActiveRecord::Schema.define(version: 2019_12_24_140226) do
     t.integer "user_id"
   end
 
-  create_table "simple_jwt_auth_users", force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "email"
     t.string "password_digest"

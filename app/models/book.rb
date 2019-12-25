@@ -1,4 +1,4 @@
 class Book < ApplicationRecord
   serialize :author
-  belongs_to :user, :class_name => 'SimpleJwtAuth::User'
+  belongs_to :user
 end
