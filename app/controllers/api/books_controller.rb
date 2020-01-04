@@ -19,16 +19,20 @@ class Api::BooksController < ApplicationController
   end
 
   def search
-    title = book_params[:search_term].gsub(/ +/, '_')
+    title = params[:search_term].gsub(/ +/, '_')
     response = HTTP.get("https://www.googleapis.com/books/v1/volumes?q=#{title}&maxResults=25")
     searched_books = JSON.parse(response.body)["items"]
     @books = []
     searched_books.each do |book|
+      if book["volumeInfo"]["imageLinks"]
+        image_url = book["volumeInfo"]["imageLinks"]["thumbnail"]
+      end
+
       @books << Book.new(
                           title: book["volumeInfo"]["title"] || "NA",
                           author: book["volumeInfo"]["authors"] || "NA",
                           publisher: book["volumeInfo"]["publisher"] || "NA",
-                          image_url: book["volumeInfo"]["imageLinks"]["thumbnail"] || "NA"
+                          image_url: image_url || "NA"
                         )
     end
     render 'index.json.jbuilder'
@@ -54,6 +58,6 @@ class Api::BooksController < ApplicationController
   def book_params
     params
       .require(:book)
-      .permit(:author, :title, :publisher, :image_url, :search_term)
+      .permit(:author, :title, :publisher, :image_url, :read)
   end
 end
