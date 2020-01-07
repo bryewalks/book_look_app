@@ -1,4 +1,4 @@
 class Book < ApplicationRecord
-  serialize :author
+  # serialize :author
   belongs_to :user
 end
