@@ -21,18 +21,14 @@ class Api::BooksController < ApplicationController
   def search
     title = params[:search_term].gsub(/ +/, '_')
     response = HTTP.get("https://www.googleapis.com/books/v1/volumes?q=#{title}&maxResults=25")
-    searched_books = JSON.parse(response.body)["items"]
+    searched_books = JSON.parse(response.body, object_class: OpenStruct)["items"]
     @books = []
     searched_books.each do |book|
-      if book["volumeInfo"]["imageLinks"]
-        image_url = book["volumeInfo"]["imageLinks"]["thumbnail"]
-      end
-
       @books << Book.new(
-                          title: book["volumeInfo"]["title"] || "NA",
-                          author: book["volumeInfo"]["authors"] || "NA",
-                          publisher: book["volumeInfo"]["publisher"] || "NA",
-                          image_url: image_url || "NA"
+                          title: book.volumeInfo.title || "NA",
+                          author: book.volumeInfo.authors && book.volumeInfo.authors.first|| "NA",
+                          publisher: book.volumeInfo.publisher || "NA",
+                          image_url: book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.thumbnail || "NA"
                         )
     end
     render 'index.json.jbuilder'
@@ -56,8 +52,10 @@ class Api::BooksController < ApplicationController
   private
 
   def book_params
+    #TODO change user_id to current_user.id when login form setup
     params
       .require(:book)
-      .permit(:author, :title, :publisher, :image_url, :read)
+      .permit(:title, :publisher, :image_url, :read, :author)
+      .merge(user_id: "1")
   end
 end
