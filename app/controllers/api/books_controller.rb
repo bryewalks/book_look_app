@@ -28,7 +28,7 @@ class Api::BooksController < ApplicationController
                           title: book.volumeInfo.title || "NA",
                           author: book.volumeInfo.authors && book.volumeInfo.authors.first|| "NA",
                           publisher: book.volumeInfo.publisher || "NA",
-                          image_url: book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.thumbnail || "NA"
+                          image_url: book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.thumbnail
                         )
     end
     render 'index.json.jbuilder'
